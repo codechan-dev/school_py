@@ -6,6 +6,14 @@ import mysql.connector
 from time import sleep
 import requests
 import json
+import pyqrcode
+from pyqrcode import *
+import png
+def generater():
+    string = "hello"
+    qr = pyqrcode.create(string)
+    qr.png("suma.png",scale=10)
+
 
 con=mysql.connector.connect(host="localhost",user="root",password="",database="pyconnect")
 cur = con.cursor()
@@ -26,6 +34,22 @@ def profile():
     print("age :",cust_age)
     print("address :",cust_address)
     menu()
+
+def insert():
+    a=input("enter dog name:")
+    b=input("enter dog state")
+    c=input("enter uses")
+
+    sql = "INSERT INTO dogs (name, state,used) VALUES (%s, %s,%s)"
+    val = [
+      (a, b,c),
+    ]
+
+    cur.executemany(sql, val)
+
+    con.commit()
+
+    print(cur.rowcount, "was inserted.")
 
 
 
@@ -65,6 +89,7 @@ def admin():
         for x in myresult:
             y.add_row([x[0],x[1],x[2],x[3],x[4]])
         print(y)
+        insert()
         menu()
 
 def status():
@@ -76,7 +101,7 @@ def menu():
     print("2. Profile")
     print("3. dogs")
     print("4.order status")
-    print("5. exit")
+    print("5. generate project download qr")
     choice = int(input("Enter your choice (Type number) : "))
     if choice not in [1, 2, 3, 4]:
         print("Please select the correct option")
@@ -90,7 +115,9 @@ def menu():
     elif choice == 4:
         status()
     elif choice ==5:
-        exit()
+         generater()
+    else:
+         exit()
 
 
 
@@ -167,3 +194,4 @@ if __name__ == "__main__":
     home()
     login()
     menu()
+   
